@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock and Mineral Filter</title>
+</head>
+<body>
+
+<h3>Select Minerals:</h3>
+<select id="mineralsDropdown"></select>
+<button onclick="addMineral()">Add</button>
+
+<h3>Selected Minerals:</h3>
+<input type="text" id="mineralsInput" readonly placeholder="Selected minerals will appear here">
+<button onclick="clearMinerals()">Clear</button>
+
+<h3>Matching Rock Types:</h3>
+<select id="rocktypes">
+    <option value="" disabled selected>Select a rock type</option>
+</select>
+
+<script>
+let rocks = [];
+let mineralsList = [];
+
+// Fetch Data from JSON File
+async function fetchData() {
+    try {
+        const response = await fetch('data.json');
+        const data = await response.json();
+        rocks = data.rocks;
+        mineralsList = data.minerals;
+        populateMinerals();
+    } catch (error) {
+        console.error("Error loading data:", error);
+    }
+}
+
+// Populate Minerals Dropdown
+function populateMinerals() {
+    const dropdown = document.getElementById("mineralsDropdown");
+    mineralsList.forEach(mineral => {
+        const option = document.createElement("option");
+        option.value = mineral;
+        option.textContent = mineral;
+        dropdown.appendChild(option);
+    });
+}
+
+// Add Mineral to Input
+function addMineral() {
+    const selectedMineral = document.getElementById("mineralsDropdown").value;
+    const mineralsInput = document.getElementById("mineralsInput");
+
+    const currentMinerals = mineralsInput.value.split(",").map(m => m.trim()).filter(m => m);
+
+    if (!currentMinerals.includes(selectedMineral)) {
+        currentMinerals.push(selectedMineral);
+        mineralsInput.value = currentMinerals.join(", ");
+    }
+    filterRocks();
+}
+
+// Clear Minerals
+function clearMinerals() {
+    document.getElementById("mineralsInput").value = "";
+    filterRocks();
+}
+
+// Filter Rocks
+function filterRocks() {
+    const input = document.getElementById("mineralsInput").value.toLowerCase().trim();
+    const selectedMinerals = input ? input.split(",").map(m => m.trim()) : [];
+
+    const rockDropdown = document.getElementById("rocktypes");
+    rockDropdown.innerHTML = `<option value="" disabled selected>Select a rock type</option>`;
+
+    rocks.forEach(rock => {
+        if (selectedMinerals.every(mineral => rock.minerals.includes(mineral))) {
+            const option = document.createElement("option");
+            option.value = rock.name;
+            option.textContent = rock.name;
+            rockDropdown.appendChild(option);
+        }
+    });
+
+    if (rockDropdown.options.length === 1 && input) {
+        const option = document.createElement("option");
+        option.textContent = "No matching rocks found";
+        option.disabled = true;
+        rockDropdown.appendChild(option);
+    }
+}
+
+window.onload = fetchData;
+</script>
+
+</body>
+</html>

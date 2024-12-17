@@ -1,0 +1,9 @@
+{
+    "rocks": [
+        { "name": "Charnockite", "minerals": ["quartz", "feldspar", "hypersthene", "garnet", "orthopyroxene"] },
+        { "name": "Garnet-Sillimanite Gneiss", "minerals": ["garnet", "biotite", "quartz", "feldspar", "sillimanite"] },
+        { "name": "Garnet-biotite Gneiss", "minerals": ["garnet", "biotite", "quartz", "feldspar"] },
+        { "name": "Biotite Gneiss", "minerals": ["biotite", "quartz", "feldspar"] }
+    ],
+    "minerals": ["quartz", "feldspar", "hypersthene", "garnet", "orthopyroxene", "biotite", "sillimanite"]
+}
